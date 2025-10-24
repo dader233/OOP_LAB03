@@ -16,7 +16,7 @@ mkdir build
 cd build
 cmake ..
 cmake --build .
-./lab_03_out
+./lab03
 ```
 
 ## Запуск тестов
