@@ -19,8 +19,8 @@ class Figure{
     public:
         Point center() const; // центр (пункт 1)
         virtual operator double() const = 0; // площадь (пункт 4)
-        friend std::istream& operator>> (std::istream&, Figure& figure); // пункт 3
-        friend std::ostream& operator<< (std::ostream&, const Figure& figure); // пункт 2
+        friend std::istream& operator>> (std::istream& is, Figure& figure); // пункт 3
+        friend std::ostream& operator<< (std::ostream& os, const Figure& figure); // пункт 2
         friend bool operator==(const Figure& fig1, const Figure& fig2);
         virtual ~Figure() = default;
    

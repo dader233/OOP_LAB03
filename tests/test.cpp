@@ -1,124 +1,92 @@
 #include <gtest/gtest.h>
-#include "../include/threeArray.h"
+#include <sstream>
+#include "../include/Figure.h"
+#include "../include/Rhombus.h"
+#include "../include/Pentagon.h"
+#include "../include/Hexagon.h"
 
-TEST(ThreeTest, DefaultConstructor) {
-    Three num;
-    testing::internal::CaptureStdout();
-    num.print(std::cout);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "\n");  // Ожидаем только перевод строки
+// Тесты для Rhombus
+TEST(RhombusTest, AreaCalculation) {
+    Rhombus rhombus;
+    EXPECT_NEAR(2.0, static_cast<double>(rhombus), 1e-6);
 }
 
-TEST(ThreeTest, SizeConstructor) {
-    Three num(4, 2);
-    testing::internal::CaptureStdout();
-    num.print(std::cout);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "2222\n");
+TEST(RhombusTest, CentreCalculation) {
+    Rhombus rhombus;
+    Point centre = rhombus.center();
+    EXPECT_NEAR(0.0, centre.x, 1e-6);
+    EXPECT_NEAR(0.0, centre.y, 1e-6);
 }
 
-TEST(ThreeTest, InitializerListConstructor) {
-    Three num{1, 0, 2};
-    testing::internal::CaptureStdout();
-    num.print(std::cout);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "102\n");
+TEST(RhombusTest, EqualityOperator) {
+    Rhombus rhombus1;
+    Rhombus rhombus2;
+    EXPECT_TRUE(rhombus1 == rhombus2);
 }
 
-TEST(ThreeTest, StringConstructor) {
-    Three num("2101");
-    testing::internal::CaptureStdout();
-    num.print(std::cout);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "2101\n");
+TEST(RhombusTest, CopyAssignment) {
+    Rhombus rhombus1;
+    Rhombus rhombus2;
+    rhombus2 = rhombus1;
+    EXPECT_TRUE(rhombus1 == rhombus2);
 }
 
-TEST(ThreeTest, CopyConstructor) {
-    Three num1{1, 2, 0};
-    Three num2 = num1;
-    testing::internal::CaptureStdout();
-    num2.print(std::cout);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "120\n");
+// Тесты для Pentagon
+TEST(PentagonTest, AreaCalculation) {
+    Pentagon pentagon;
+    double area = static_cast<double>(pentagon);
+    EXPECT_GT(area, 0.0);
 }
 
-TEST(ThreeTest, MoveConstructor) {
-    Three num1{2, 1, 0};
-    Three num2 = std::move(num1);
-    testing::internal::CaptureStdout();
-    num2.print(std::cout);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "210\n");
+TEST(PentagonTest, CentreCalculation) {
+    Pentagon pentagon;
+    Point centre = pentagon.center();
+    EXPECT_NEAR(0.0, centre.x, 1e-3);
+    EXPECT_NEAR(0.4, centre.y, 1e-3);
 }
 
-TEST(ThreeTest, AddOperation) {
-    Three num1("12");
-    Three num2("21");
-    Three result = num1.add(num2);
-    testing::internal::CaptureStdout();
-    result.print(std::cout);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "110\n");
+// Тесты для Hexagon
+TEST(HexagonTest, AreaCalculation) {
+    Hexagon hexagon;
+    double area = static_cast<double>(hexagon);
+    EXPECT_GT(area, 0.0);
 }
 
-TEST(ThreeTest, SubtractOperation) {
-    Three num1("21");
-    Three num2("12");
-    Three result = num1.subtract(num2);
-    testing::internal::CaptureStdout();
-    result.print(std::cout);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "2\n");
+TEST(HexagonTest, CentreCalculation) {
+    Hexagon hexagon;
+    Point centre = hexagon.center();
+    EXPECT_NEAR(0.0, centre.x, 1e-6);
+    EXPECT_NEAR(0.0, centre.y, 1e-6);
 }
 
-TEST(ThreeTest, SubtractThrowsException) {
-    Three num1("1");
-    Three num2("2");
-    EXPECT_THROW(num1.subtract(num2), std::invalid_argument);
-}
-
-TEST(ThreeTest, ComparisonOperations) {
-    Three num1("21");
-    Three num2("12");
+// Тест полиморфизма
+TEST(PolymorphismTest, FigurePointer) {
+    Rhombus* rhombus = new Rhombus();
+    Pentagon* pentagon = new Pentagon();
+    Hexagon* hexagon = new Hexagon();
     
-    EXPECT_TRUE(num2.less(num1));
-    EXPECT_TRUE(num1.greater(num2));
-    EXPECT_FALSE(num1.equals(num2));
+    Figure* figures[] = {rhombus, pentagon, hexagon};
     
-    Three num3("21");
-    EXPECT_TRUE(num1.equals(num3));
+    for (int i = 0; i < 3; ++i) {
+        Point centre = figures[i]->center();
+        double area = static_cast<double>(*figures[i]);
+        EXPECT_GT(area, 0.0);
+    }
+    
+    delete rhombus;
+    delete pentagon;
+    delete hexagon;
 }
 
-TEST(ThreeTest, InvalidDigitThrowsException) {
-    EXPECT_THROW(Three(3, 5), std::invalid_argument);
-    EXPECT_THROW(Three("312"), std::invalid_argument);
+// Простой тест вывода
+TEST(StreamTest, OutputOperator) {
+    Rhombus rhombus;
+    std::ostringstream oss;
+    oss << rhombus;
+    EXPECT_FALSE(oss.str().empty());
 }
 
-TEST(ThreeTest, EmptyStringThrowsException) {
-    EXPECT_THROW(Three(""), std::invalid_argument);
-}
-
-TEST(ThreeTest, AddWithCarry) {
-    Three num1("222");
-    Three num2("1");
-    Three result = num1.add(num2);
-    testing::internal::CaptureStdout();
-    result.print(std::cout);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "1000\n");
-}
-
-TEST(ThreeTest, LeadingZerosRemoval) {
-    Three num1("100");
-    Three num2("001");
-    Three result = num1.subtract(num2);
-    testing::internal::CaptureStdout();
-    result.print(std::cout);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "22\n");
-}
-
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

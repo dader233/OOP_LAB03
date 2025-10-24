@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
+project(lab03)
 
-project(lab02)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -12,16 +12,24 @@ FetchContent_Declare(
     TLS_VERIFY false
 )
 
-# For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
-# add the executable
-add_library(${CMAKE_PROJECT_NAME}_lib src/threeArray.cpp)
+
+add_library(${CMAKE_PROJECT_NAME}_lib
+    src/Figure.cpp
+    src/Rhombus.cpp
+    src/Pentagon.cpp
+    src/Hexagon.cpp
+)
+
 add_executable(${CMAKE_PROJECT_NAME} main.cpp)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_PROJECT_NAME}_lib)
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC include)
 
 enable_testing()
 
 add_executable(tests tests/test.cpp)
-target_link_libraries(tests PRIVATE ${CMAKE_PROJECT_NAME}_lib gtest_main)
-add_test(NAME MyProjectTests COMMAND tests)
+target_link_libraries(tests ${CMAKE_PROJECT_NAME}_lib gtest_main)
+target_include_directories(tests PUBLIC include)
+
+add_test(NAME ${CMAKE_PROJECT_NAME}Tests COMMAND tests)

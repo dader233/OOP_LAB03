@@ -23,7 +23,7 @@ Rhombus& Rhombus::operator=(const Rhombus& other){ //Копирующее при
 }
 
 Rhombus& Rhombus::operator=(Rhombus&& other) noexcept{
-    if (this != other){
+    if (this != &other){
         for (Point *a : points){
             delete a;
         }
@@ -45,7 +45,7 @@ void Rhombus::read(std::istream& is){
     for(Point* a : points){
         delete a;
     }
-    points.clear()
+    points.clear();
     Point p1, p2 , p3, p4;
     std::cout << "Enter 4 points of Rhombus:" << std::endl;
     std::cout << "Point 1: X_POS Y_POS: ";
@@ -69,14 +69,11 @@ bool Rhombus::equal(const Figure& other) const{
         for(size_t j = 0; j < rhs->points.size(); j++){
             if(*points[i] == *rhs->points[j]){
                 ++point_cnt;
-                continue;
+                break;
             }
         }
     }
-    if (point_cnt == 4){
-        return true;
-    }
-    return false;
+    return point_cnt == 4;
 }
 Rhombus::operator double() const {
     double d1 = std::sqrt(std::pow(points[0]->x - points[2]->x, 2) + 

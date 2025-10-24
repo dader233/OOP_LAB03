@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblab03_lib.a CMakeFiles/lab03_lib.dir/src/Figure.cpp.o CMakeFiles/lab03_lib.dir/src/Rhombus.cpp.o CMakeFiles/lab03_lib.dir/src/Pentagon.cpp.o CMakeFiles/lab03_lib.dir/src/Hexagon.cpp.o
+/usr/bin/ranlib liblab03_lib.a
